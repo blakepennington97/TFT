@@ -6,7 +6,7 @@ from pprint import pprint
 #     return tier_S
 
 def get_data():
-    pprint(data)
+    #pprint(data)
     return data
 
 def build_data(input):
