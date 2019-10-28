@@ -25,8 +25,7 @@ data = {
                  'chogath',
                  'jinx',
                  'kaisa']
-     ,
-
+    ,
     'imperial_knights' : ['darius',
                     'garen',
                     'mordekaiser',

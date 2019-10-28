@@ -3,12 +3,11 @@ import team_comps
 
 
 
-user_input = []
-
 def get_user_input():
-    user_input_string = input("What champions do you have?")
+    user_input_string = raw_input("What champions do you have?")
+    print(user_input_string)
     team_comps.build_data(user_input_string)
-    calculate.match(user_input, team_comps.tier_S)
+    calculate.match(team_comps.user_data, team_comps.data)
 
 
 while 1:
