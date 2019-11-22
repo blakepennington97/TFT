@@ -62,7 +62,15 @@ def match(input_list):
                 hit_list.append(match)
 
     top3 = (Counter(hit_list)).most_common(3)
+    best_team = top3
     return top3
+
+
+def recommend(team_list):
+    results = []
+    for team in team_list:
+        results.append(list(set(team_comps.team_data[team]) - set(team_comps.user_team)))
+    return results
 
 
 # Returns the difference between the user team and the calculated best team(s)
@@ -80,5 +88,5 @@ def recommend_multiple(team_list):
 
 def remove_from_hit_list(removed_champ):
     for hit in hit_list:
-        if removed_champ in teams[hit]:
+        if removed_champ in team_comps.team_data[hit]:
             hit_list.remove(hit)
