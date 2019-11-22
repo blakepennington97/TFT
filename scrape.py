@@ -57,6 +57,7 @@ def scrape():
     preScrapeTeamCharactersStoA = preScrapeTeamCharactersAll[:numOfTeamCharactersNeeded]
     tierGroupSoup = soup.find_all("div",{"class" : "tier-group"})
     charactersFound = []
+    spatulaItemsFound = []
     for i in range(0,2):
         charactersListSoup = tierGroupSoup[i].find_all("div",{"class":"characters-list"})
         for j in charactersListSoup:
@@ -65,9 +66,19 @@ def scrape():
                 teamCharactersSoup = k.find("div",{"class":"team-characters"})
                 imgSoup = teamCharactersSoup.find_all('img', alt=True)
                 hrefSoup = teamCharactersSoup.find_all('a', href=True)
-                team = []
+                item = []
+                spatulaFound = False
                 for img in imgSoup:
-                    print(img["alt"])
+                    if img["alt"] in ("Youmuu's Ghostblade","Warden's Mail",
+                    "Frozen Mallet","Inferno Cinder","Talisman of Light",
+                    "Blade of the Ruined King","Berserker Axe","Mage's Cap"):
+                        item.append(img["alt"])
+                        spatulaFound = True
+                if spatulaFound == False:
+                    spatulaItemsFound.append("None")
+                else:
+                    spatulaItemsFound.append(item)
+                team = []
                 for p in hrefSoup:  
                     if p["href"] != "/item-builder":
                         name = p["href"]
@@ -75,8 +86,8 @@ def scrape():
                         name = splitName[2]
                         team.append(name)
                 charactersFound.append(team)
-
+    
     teamDictionary = dict(zip(teamList, charactersFound))
     tierDictionary = dict(zip(teamList, tierList))
-
-    return tierDictionary, teamDictionary
+    spatulaDictionary = dict(zip(teamList, spatulaItemsFound))
+    return tierDictionary, teamDictionary, spatulaDictionary

@@ -81,7 +81,7 @@ def get_user_input():
 
 
 print("\n\nScraping latest meta data...")
-_temp, team_comps.team_data = scrape()
+_temp, team_comps.team_data, _temp1 = scrape()
 print("Updating champion list with latest...")
 champ_and_item.update()
 print("Done.\n\n")
