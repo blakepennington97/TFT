@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
-
+''' Lines 7-33 were taken from:
+https://stackoverflow.com/questions/37754138/how-to-render-html-with-pyqt5s-qwebengineview
+'''
 def render(url):
     """Fully render HTML, JavaScript and all."""
 
@@ -41,6 +43,7 @@ def scrape():
     preScrapeTeamNames = soup.find_all('div',{"class" : "team-name"})
     teamList = []
     tierList = []
+    #iterate through all the names and only add S or A tier teams to the teamList
     for each in preScrapeTeamNames:
         name = each.text
         tier = name[:1]
@@ -54,23 +57,37 @@ def scrape():
     preScrapeTeamCharactersStoA = preScrapeTeamCharactersAll[:numOfTeamCharactersNeeded]
     tierGroupSoup = soup.find_all("div",{"class" : "tier-group"})
     charactersFound = []
+    spatulaItemsFound = []
     for i in range(0,2):
         charactersListSoup = tierGroupSoup[i].find_all("div",{"class":"characters-list"})
         for j in charactersListSoup:
             teamPortraitSoup = j.find_all("div",{"class":"team-portrait"})
             for k in teamPortraitSoup:
                 teamCharactersSoup = k.find("div",{"class":"team-characters"})
+                imgSoup = teamCharactersSoup.find_all('img', alt=True)
                 hrefSoup = teamCharactersSoup.find_all('a', href=True)
+                item = []
+                spatulaFound = False
+                for img in imgSoup:
+                    if img["alt"] in ("Youmuu's Ghostblade","Warden's Mail",
+                    "Frozen Mallet","Inferno Cinder","Talisman of Light",
+                    "Blade of the Ruined King","Berserker Axe","Mage's Cap"):
+                        item.append(img["alt"])
+                        spatulaFound = True
+                if spatulaFound == False:
+                    spatulaItemsFound.append("None")
+                else:
+                    spatulaItemsFound.append(item)
                 team = []
-                for p in hrefSoup:      
+                for p in hrefSoup:  
                     if p["href"] != "/item-builder":
                         name = p["href"]
                         splitName = name.split("/")
                         name = splitName[2]
                         team.append(name)
                 charactersFound.append(team)
-
+    
     teamDictionary = dict(zip(teamList, charactersFound))
     tierDictionary = dict(zip(teamList, tierList))
-
-    return tierDictionary, teamDictionary
+    spatulaDictionary = dict(zip(teamList, spatulaItemsFound))
+    return tierDictionary, teamDictionary, spatulaDictionary
