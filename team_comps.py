@@ -17,9 +17,8 @@ def get_team_data():
 def add_champ(champ_name):
     if valid_name(champ_name):
         user_team.append(champ_name)
-        print("Your current team: %s\n" % user_team)
     else:
-        print("Champion %s is not valid, please enter a valid champion's name" % champ_name)
+        print("Champion %s is either not valid or bad, re-enter or sell" % champ_name)
         print(user_team)
 
 

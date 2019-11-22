@@ -66,7 +66,7 @@ def match(input_list):
     return top3
 
 
-def recommend(team_list):
+def single_recommend(team_list):
     results = []
     for team in team_list:
         results.append(list(set(team_comps.team_data[team]) - set(team_comps.user_team)))
@@ -74,15 +74,10 @@ def recommend(team_list):
 
 
 # Returns the difference between the user team and the calculated best team(s)
-def recommend_multiple(team_list):
+def recommend(team_list):
     results = []
-    temp = []
     for team in team_list:
         results.append(list(set(team_comps.team_data[team[0]]) - set(team_comps.user_team)))
-    for item in results:
-        for champion in item:
-            temp.append(champion)
-    results = list(set(temp))
     return results
 
 

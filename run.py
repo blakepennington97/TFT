@@ -2,9 +2,13 @@ import calculate
 import team_comps
 import champ_and_item
 from scrape import scrape
-from pprint import pprint
 
 user_input = []
+
+
+class Dumb():
+    lockmode = False
+
 
 
 class text_colors:
@@ -26,14 +30,26 @@ def is_int(check):
         return False
 
 
+def format_and_print_results(best_team, missing):
+    lines = ['', '', '']
+    i = 0
+    print(" Your current team: %s\n\n" % team_comps.user_team)
+    print(text_colors.BOLD + "   Recommended teams                              Recommended champions\n" + text_colors.END_COLOR)
+    for team in best_team:
+        lines[i] = (text_colors.PURPLE + str(team) + text_colors.END_COLOR + text_colors.GREEN + "  --->  " +
+                    text_colors.END_COLOR + text_colors.YELLOW + str(missing[i]) + text_colors.END_COLOR)
+        i += 1
+    for line in lines:
+        print(line)
+
+
 def get_user_input():
     user_input_string = input("What champions do you have? \n(Type \"l\" and team number that you want to lock, index starts with 0)\n")
     user_input_string = user_input_string.split(" ")
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-    lockmode = False
+
     lock_team = []
     best_team = calculate.match(user_input_string)
-
     check = user_input_string[0]
 
     if len(user_input_string) == 1 and is_int(check[1]) and check[0] == 'l':
@@ -44,7 +60,7 @@ def get_user_input():
             else:
                 print(text_colors.RED + "Invalid input of index, please enter a valid index" + text_colors.END_COLOR)
         elif best_team[index - 1][0] is not None:
-            lockmode = True
+            Dumb.lockmode = True
             lock_team.append(best_team[index - 1][0])
             print("You've already locked team: ", lock_team)
     # elif len(user_input_string) > 1:
@@ -56,14 +72,12 @@ def get_user_input():
             else:
                 team_comps.add_champ(i)
 
-    if lockmode is True:
-        missing = calculate.recommend(lock_team)
-        print(text_colors.YELLOW + "Recommended team(s) ----> %s\n" % lock_team + text_colors.END_COLOR)
+    if Dumb.lockmode:
+        missing = calculate.single_recommend(lock_team)
+        format_and_print_results(lock_team, missing)
     else:
-        missing = calculate.recommend_multiple(best_team)
-        print(text_colors.YELLOW + "Recommended team(s) ----> %s\n" % best_team + text_colors.END_COLOR)
-
-    print(text_colors.BLUE + "Recommended champion(s) ----> %s\n" % missing+ text_colors.END_COLOR)
+        missing = calculate.recommend(best_team)
+        format_and_print_results(best_team, missing)
 
 
 print("\n\nScraping latest meta data...")
