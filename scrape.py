@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
-
+''' Lines 7-33 were taken from:
+https://stackoverflow.com/questions/37754138/how-to-render-html-with-pyqt5s-qwebengineview
+'''
 def render(url):
     """Fully render HTML, JavaScript and all."""
 
@@ -41,6 +43,7 @@ def scrape():
     preScrapeTeamNames = soup.find_all('div',{"class" : "team-name"})
     teamList = []
     tierList = []
+    #iterate through all the names and only add S or A tier teams to the teamList
     for each in preScrapeTeamNames:
         name = each.text
         tier = name[:1]
@@ -60,9 +63,12 @@ def scrape():
             teamPortraitSoup = j.find_all("div",{"class":"team-portrait"})
             for k in teamPortraitSoup:
                 teamCharactersSoup = k.find("div",{"class":"team-characters"})
+                imgSoup = teamCharactersSoup.find_all('img', alt=True)
                 hrefSoup = teamCharactersSoup.find_all('a', href=True)
                 team = []
-                for p in hrefSoup:      
+                for img in imgSoup:
+                    print(img["alt"])
+                for p in hrefSoup:  
                     if p["href"] != "/item-builder":
                         name = p["href"]
                         splitName = name.split("/")
